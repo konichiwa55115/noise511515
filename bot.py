@@ -1,61 +1,74 @@
 import os
 from pyrogram import Client, filters
+from pyrogram.types import ForceReply
 import subprocess
+from pyrogram.types import InlineKeyboardMarkup , InlineKeyboardButton , ReplyKeyboardMarkup , CallbackQuery
+
 bot = Client(
-    "myfirs",
+    "voluemincreaser",
     api_id=17983098,
     api_hash="ee28199396e0925f1f44d945ac174f64",
     bot_token="6280972722:AAG3GrropPJhZvfjljtgppKeeXpfpBVZG4Y"
 )
+
+CHOOSE_UR_LANG = " اختر النمط الخاص بإزالة الضوضاء "
+CHOOSE_UR_LANG_BUTTONS = [
+    [InlineKeyboardButton("mod1",callback_data="mod1")],
+     [InlineKeyboardButton("mod2",callback_data="mod2")],
+     [InlineKeyboardButton("mod3",callback_data="mod3")],
+     [InlineKeyboardButton("mod4",callback_data="mod4")],
+     [InlineKeyboardButton("mod5",callback_data="mod5")]
+]
+
+
 @bot.on_message(filters.command('start') & filters.private)
 def command1(bot,message):
-    bot.send_message(message.chat.id, " السلام عليكم أنا فصل الموسيقا , فقط أرسل الصوتية هنا\n\n  لبقية البوتات هنا \n\n https://t.me/ibnAlQyyim/1120 ",disable_web_page_preview=True)
-    
-@bot.on_message(filters.private & filters.incoming & filters.audio )
+    bot.send_message(message.chat.id, " السلام عليكم أنا إزالة الضوضاء ورفع مستوى الصوت , فقط أرسل الصوتية هنا\n\n  لبقية البوتات هنا \n\n https://t.me/ibnAlQyyim/1120 ",disable_web_page_preview=True)
+
+@bot.on_message(filters.private & filters.incoming &  filters.audio | filters.voice  )
 def _telegram_file(client, message):
-  try: 
-    with open("./output", 'r') as fh:
-      
-            sent_message = message.reply_text('هناك عملية يتم الآن . أرسل الصوتية بعد مدة من فضلك', quote=True)
-            return
-  except FileNotFoundError: 
-    pass  
+  
+  global user_id
   user_id = message.from_user.id 
-  sent_message = message.reply_text('جار الفصل \n\n قال رسول الله ﷺ  لَيَكونَنَّ مِن أُمَّتي أقْوامٌ يَسْتَحِلُّونَ الحِرَ والحَرِيرَ، والخَمْرَ والمَعازِفَ، ولَيَنْزِلَنَّ أقْوامٌ إلى جَنْبِ عَلَمٍ، يَرُوحُ عليهم بسارِحَةٍ لهمْ، يَأْتِيهِمْ -يَعْنِي الفقِيرَ- لِحاجَةٍ، فيَقولونَ: ارْجِعْ إلَيْنا غَدًا، فيُبَيِّتُهُمُ اللَّهُ، ويَضَعُ العَلَمَ، ويَمْسَخُ آخَرِينَ قِرَدَةً وخَنازِيرَ إلى يَومِ القِيامَةِ. ( صحيح البخاري)', quote=True)
-  file = message.audio
-  file_path = message.download(file_name="entry")
+  file = message
+  global file_path
+  file_path = message.download(file_name="./downloads/")
+  filename = os.path.basename(file_path)
+  realname, ext = os.path.splitext(filename)
+  global mp3file
+  mp3file = realname+".mp3"
+  message.reply(
+             text = CHOOSE_UR_LANG,
+             reply_markup = InlineKeyboardMarkup(CHOOSE_UR_LANG_BUTTONS)
 
-    # Execute speech.py script with entry file
-  subprocess.call(['spleeter', 'separate', '-p', 'spleeter:2stems', '-o', 'output' , "./downloads/entry" ])
-  subprocess.call(['mv',"./output/entry/vocals.wav" , "./output/entry/vocals.mp3" ])
-    # Upload transcription file to user
-  with open("./output/entry/vocals.mp3", 'rb') as f:
-        bot.send_audio(message.chat.id, f)
-  subprocess.call(['sudo','rm','-r',"output"]) 
- 
- 
-@bot.on_message(filters.private & filters.incoming & filters.voice )
+        )
+@bot.on_callback_query()
+def callback_query(CLIENT,CallbackQuery):
+  global langtoken
+  if CallbackQuery.data == "mod1":
+      langtoken = "./rnnoise-models/somnolent-hogwash-2018-09-01/sh.rnnn"
+  elif CallbackQuery.data == "mod2":
+      langtoken = "./rnnoise-models/marathon-prescription-2018-08-29/mp.rnnn"
+  elif CallbackQuery.data == "mod3":
+      langtoken = "./rnnoise-models/leavened-quisling-2018-08-31/lq.rnnn"
+  elif CallbackQuery.data == "mod4" :
+      langtoken = './rnnoise-models/conjoined-burgers-2018-08-28/cb.rnnn'
+  elif CallbackQuery.data == "mod5":
+      langtoken = "./rnnoise-models/beguiling-drafter-2018-08-30/bd.rnnn"
+  
+  CallbackQuery.edit_message_text(
+      
+      "جار إزالة الضوضاء"
+  )   
+  subprocess.call(['ffmpeg','-i',file_path,'-af','arnndn=m=./rnnoise-models/beguiling-drafter-2018-08-30/bd.rnnn',"mod"+mp3file,'-y']) 
+  subprocess.call(['ffmpeg','-i',"mod"+mp3file,'-af', "volume=4",mp3file,'-y']) 
+  with open(mp3file, 'rb') as f:
+         bot.send_audio(user_id, f)
+  subprocess.call(['unlink',mp3file]) 
+  subprocess.call(['unlink',"mod"+mp3file])
+  subprocess.call(['unlink',file_path]) 
 
-def _telegram_file(client, message):
-  try: 
-    with open("./output", 'r') as fh:
-        
-            sent_message = message.reply_text('هناك عملية  تتم الآن . أرسل الصوتية بعد مدة من فضلك', quote=True)
-            return
-  except FileNotFoundError: 
-    pass  
-  user_id = message.from_user.id
-  sent_message = message.reply_text('جار الفصل \n\n قال رسول الله ﷺ  لَيَكونَنَّ مِن أُمَّتي أقْوامٌ يَسْتَحِلُّونَ الحِرَ والحَرِيرَ، والخَمْرَ والمَعازِفَ، ولَيَنْزِلَنَّ أقْوامٌ إلى جَنْبِ عَلَمٍ، يَرُوحُ عليهم بسارِحَةٍ لهمْ، يَأْتِيهِمْ -يَعْنِي الفقِيرَ- لِحاجَةٍ، فيَقولونَ: ارْجِعْ إلَيْنا غَدًا، فيُبَيِّتُهُمُ اللَّهُ، ويَضَعُ العَلَمَ، ويَمْسَخُ آخَرِينَ قِرَدَةً وخَنازِيرَ إلى يَومِ القِيامَةِ. ( صحيح البخاري)', quote=True)
-  file = message.voice
-  file_path = message.download(file_name="entry")
 
-    # Execute speech.py script with entry file
-  subprocess.call(['spleeter', 'separate', '-p', 'spleeter:2stems', '-o', 'output' , "./downloads/entry" ])
-  subprocess.call(['mv',"./output/entry/vocals.wav" , "./output/entry/vocals.mp3" ])
-    # Upload transcription file to user
-  with open('./output/entry/vocals.mp3', 'rb') as f:
-        bot.send_audio(message.chat.id, f)
-  subprocess.call(['sudo','rm','-r',"output"])  
-   
+       
 
 bot.run()

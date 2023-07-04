@@ -61,7 +61,7 @@ def callback_query(CLIENT,CallbackQuery):
       "جار إزالة الضوضاء"
   )   
   subprocess.call(['ffmpeg','-i',file_path,'-af','arnndn=m=./rnnoise-models/beguiling-drafter-2018-08-30/bd.rnnn',"mod"+mp3file,'-y']) 
-  subprocess.call(['ffmpeg','-i',"mod"+mp3file,'-af', "volume=4",mp3file,'-y']) 
+  subprocess.call(['ffmpeg','-i',"mod"+mp3file,'-af', "volume=2",mp3file,'-y']) 
   with open(mp3file, 'rb') as f:
          bot.send_audio(user_id, f)
   subprocess.call(['unlink',mp3file]) 

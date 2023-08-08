@@ -7,7 +7,7 @@ bot = Client(
     "voluemincreaser",
     api_id=17983098,
     api_hash="ee28199396e0925f1f44d945ac174f64",
-    bot_token="6280972722:AAG3GrropPJhZvfjljtgppKeeXpfpBVZG4Y"
+    bot_token="5848326557:AAE00dflZddzH1e9ABLKwReT7ka6qltZHXA"
 )
 
 

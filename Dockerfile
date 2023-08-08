@@ -9,7 +9,7 @@ COPY start.sh /start.sh
 COPY requirements.txt /requirements.txt
 RUN cd /
 RUN pip3 install -U -r requirements.txt
-RUN git clone https://github.com/konichiwa55115/vidmk /LazyDeveloper && cd /LazyDeveloper && git clone https://github.com/GregorR/rnnoise-models&& cd /
+RUN git clone https://github.com/konichiwa55115/vidmk /LazyDeveloper && cd /LazyDeveloper && git clone https://github.com/GregorR/rnnoise-models && cd /
 WORKDIR /LazyDeveloper
 RUN dos2unix /start.sh 
 CMD ["/bin/bash", "/start.sh"]

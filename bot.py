@@ -31,8 +31,8 @@ def _telegram_file(client, message):
   cmd(f'ffmpeg -i ./downloads/{mp3file} -vf arnndn=m=./rnnoise-models/beguiling-drafter-2018-08-30/bd.rnnn ./downloads/{tempmp3} -y ')
   cmd(f'ffmpeg -i ./downloads/{tempmp3} -vf arnndn=m=./rnnoise-models/conjoined-burgers-2018-08-28/cb.rnnn ./downloads/{mp3file} -y ')
   cmd(f'ffmpeg -i ./downloads/{mp3file} -vf arnndn=m=./rnnoise-models/leavened-quisling-2018-08-31/lq.rnnn ./downloads/{tempmp3} -y ')
-  cmd(f'ffmpeg -i ./downloads/{tempmp3} -vf arnndn=m=./rnnoise-models/marathon-prescription-2018-08-29/mp.rnnn ./downloads/{mp3file} -y ')
-  with open(f'''./downloads/{mp3file}''', 'rb') as f:
+  cmd(f'ffmpeg -i ./downloads/{tempmp3} -vf arnndn=m=./rnnoise-models/marathon-prescription-2018-08-29/mp.rnnn {mp3file} -y ')
+  with open(mp3file, 'rb') as f:
          bot.send_audio(user_id, f)
   shutil.rmtree('./downloads/')
   

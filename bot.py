@@ -24,9 +24,9 @@ def _telegram_file(client, message):
   file_path = message.download(file_name="./downloads/")
   filename = os.path.basename(file_path)
   realname, ext = os.path.splitext(filename)
-  mp3file = f'''{realname}.mp3'''
-  tempmp3 = f'''mod{mp3file}'''
-  cmd(f'ffmpeg -i {file_path} -vf arnndn=m=./rnnoise-models/somnolent-hogwash-2018-09-01/sh.rnnn ./downloads/{tempmp3} -y')
+  mp3file = f'''"{realname}.mp3"'''
+  tempmp3 = f'''"mod{mp3file}"'''
+  cmd(f'ffmpeg -i "{file_path}" -vf arnndn=m=./rnnoise-models/somnolent-hogwash-2018-09-01/sh.rnnn ./downloads/{tempmp3} -y')
   cmd(f'ffmpeg -i ./downloads/{tempmp3} -vf arnndn=m=./rnnoise-models/somnolent-hogwash-2018-09-01/sh.rnnn ./downloads/{mp3file} -y ')
   cmd(f'ffmpeg -i ./downloads/{mp3file} -vf arnndn=m=./rnnoise-models/beguiling-drafter-2018-08-30/bd.rnnn ./downloads/{tempmp3} -y ')
   cmd(f'ffmpeg -i ./downloads/{tempmp3} -vf arnndn=m=./rnnoise-models/conjoined-burgers-2018-08-28/cb.rnnn ./downloads/{mp3file} -y ')

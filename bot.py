@@ -22,6 +22,7 @@ def _telegram_file(client, message):
   user_id = message.from_user.id 
   file = message
   file_path = message.download(file_name="./downloads/")
+  filename = os.path.basename(file_path)
   realname, ext = os.path.splitext(filename)
   mp3file = f'''"{realname}.mp3"'''
   tempmp3 = f'''"mod{realname}.mp3"'''

@@ -21,18 +21,19 @@ def _telegram_file(client, message):
   global user_id
   user_id = message.from_user.id 
   file = message
-  file_path = message.download(file_name="aud")
-  tempmp3 = "mod.mp3"
-  tem2pmp3 = "mod2.mp3"
-  cmd(f'''ffmpeg -i {file_path} -vf arnndn=m=./rnnoise-models/somnolent-hogwash-2018-09-01/sh.rnnn "{tempmp3}" -y''')
-  cmd(f'''ffmpeg -i "{tempmp3}" -vf arnndn=m=./rnnoise-models/somnolent-hogwash-2018-09-01/sh.rnnn "{tem2pmp3}" -y ''')
-  cmd(f'''ffmpeg -i "{tem2pmp3}" -vf arnndn=m=./rnnoise-models/beguiling-drafter-2018-08-30/bd.rnnn "{tempmp3}" -y ''')
-  cmd(f'''ffmpeg -i "{tempmp3}" -vf arnndn=m=./rnnoise-models/conjoined-burgers-2018-08-28/cb.rnnn "{tem2pmp3}" -y ''')
-  cmd(f'''ffmpeg -i "{tem2pmp3}" -vf arnndn=m=./rnnoise-models/leavened-quisling-2018-08-31/lq.rnnn "{tempmp3}" -y ''')
-  cmd(f'''ffmpeg -i "{tempmp3}" -vf arnndn=m=./rnnoise-models/marathon-prescription-2018-08-29/mp.rnnn "{tem2pmp3}" -y ''')
+  file_path = message.download(file_name="./downloads/")
+  realname, ext = os.path.splitext(filename)
+  mp3file = f'''"{realname}.mp3"'''
+  tempmp3 = f'''"mod{realname}.mp3"'''
+  cmd(f'''ffmpeg -i "{file_path}" -vf arnndn=m=./rnnoise-models/somnolent-hogwash-2018-09-01/sh.rnnn ./downloads/"{tempmp3}" -y''')
+  cmd(f'''ffmpeg -i ./downloads/"{tempmp3}" -vf arnndn=m=./rnnoise-models/somnolent-hogwash-2018-09-01/sh.rnnn ./downloads/"{mp3file}" -y ''')
+  cmd(f'''ffmpeg -i ./downloads/"{mp3file}" -vf arnndn=m=./rnnoise-models/beguiling-drafter-2018-08-30/bd.rnnn ./downloads/"{tempmp3}" -y ''')
+  cmd(f'''ffmpeg -i ./downloads/"{tempmp3}" -vf arnndn=m=./rnnoise-models/conjoined-burgers-2018-08-28/cb.rnnn ./downloads/"{mp3file}" -y ''')
+  cmd(f'''ffmpeg -i ./downloads/"{mp3file}" -vf arnndn=m=./rnnoise-models/leavened-quisling-2018-08-31/lq.rnnn ./downloads/"{tempmp3}" -y ''')
+  cmd(f'''ffmpeg -i ./downloads/"{tempmp3}" -vf arnndn=m=./rnnoise-models/marathon-prescription-2018-08-29/mp.rnnn "{mp3file}" -y ''')
   with open(mp3file, 'rb') as f:
          bot.send_audio(user_id, f)
   shutil.rmtree('./downloads/')
-  cmd(f'''rm "{file_path}" "{tempmp3}" "{temp2mp3}"''')
+  cmd(f'''rm "{file_path}" "{mp3file}"''')
   
 bot.run()

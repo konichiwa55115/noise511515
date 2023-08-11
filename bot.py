@@ -35,6 +35,6 @@ def _telegram_file(client, message):
   with open(filename, 'rb') as f:
          bot.send_audio(user_id, f)
   shutil.rmtree('./downloads/')
-  cmd(f'''rm "{file_path}" "{tempmp3}" "{mp3file}"''')
+  cmd(f'''rm "{tempmp3}" "{mp3file}"''')
   
 bot.run()
